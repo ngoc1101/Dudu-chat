@@ -106,7 +106,64 @@ function activeChat(){return data.chats.find(c=>c.id===current)}
 function renderChats(){let el=document.getElementById('chatList');document.getElementById('chatCount').textContent=data.chats.length+' cuộc trò chuyện';el.innerHTML=data.chats.length?data.chats.map(c=>`<button class="chatitem" data-chat="${c.id}"><div class="chatavatar">♡</div><div class="chatmeta"><b>${esc(c.title)}</b><small>${esc(c.messages.at(-1)?.text||c.prompt||'Chưa có tin nhắn')}</small></div><span>›</span></button>`).join(''):'<div class="empty">Chưa có cuộc trò chuyện nào.<br>Hãy tạo thế giới đầu tiên của bạn nhé.</div>';el.querySelectorAll('[data-chat]').forEach(b=>b.onclick=()=>openChat(b.dataset.chat))}
 function openChat(id){current=id;let c=activeChat();if(!c)return;random=!!c.random;document.getElementById('chatTitle').textContent=c.title;document.getElementById('chatSubtitle').textContent='Bộ nhớ riêng · '+c.messages.length+' tin nhắn';document.getElementById('toggleRandom').textContent='✧ Random Mode: '+(random?'ON':'OFF');renderMessages();page('chat')}
 function renderMessages(){let c=activeChat();let el=document.getElementById('messages');el.innerHTML=c.messages.length?c.messages.map(m=>`<div class="bubble ${m.role==='user'?'user':'assistant'}">${m.image?`<div>▧ Ảnh đã đính kèm: ${esc(m.text)}</div>`:esc(m.text)}<span class="time">${new Date(m.time).toLocaleString('vi-VN')}</span></div>`).join(''):'<div class="empty">Không gian này đang trống.<br>Bắt đầu bằng tin nhắn đầu tiên của bạn.</div>';el.scrollTop=el.scrollHeight}
-function send(text){let c=activeChat();if(!c||!text.trim())return;c.messages.push({role:'user',text:text.trim(),time:Date.now()});save();document.getElementById('messageInput').value='';renderMessages();document.getElementById('chatSubtitle').textContent='Bộ nhớ riêng · '+c.messages.length+' tin nhắn'}
+
+async function send(text) {
+  const c = activeChat();
+  if (!c || !text.trim()) return;
+
+  const message = text.trim();
+
+  c.messages.push({
+    role: "user",
+    text: message,
+    time: Date.now()
+  });
+
+  save();
+  document.getElementById("messageInput").value = "";
+  renderMessages();
+
+  try {
+    const history = c.messages.slice(0, -1)
+      .filter(m => !m.image)
+      .map(m => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.text }]
+      }));
+
+    const response = await fetch(
+      "https://tight-rice-13f1.buithanhhung2019-opponhatanh.workers.dev",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, history })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Lỗi Gemini");
+    }
+
+    c.messages.push({
+      role: "assistant",
+      text: result.reply,
+      time: Date.now()
+    });
+
+  } catch (error) {
+    c.messages.push({
+      role: "assistant",
+      text: "Lỗi kết nối: " + error.message,
+      time: Date.now()
+    });
+  }
+
+  save();
+  renderMessages();
+}
+     
 function renderMemory(){let c=activeChat();document.getElementById('memoryFor').textContent=c?'Đang xem ký ức của: '+c.title:'Hãy mở một cuộc trò chuyện trước.';document.getElementById('memoryList').innerHTML=c&&c.memories.length?c.memories.map((m,i)=>`<div class="panel">${esc(m.text)}<div class="toolbar"><small class="muted">${new Date(m.time).toLocaleString('vi-VN')}</small><button class="tool danger" data-delmem="${i}">Xóa</button></div></div>`).join(''):'<p class="muted">Chưa có ký ức được ghim.</p>';document.querySelectorAll('[data-delmem]').forEach(b=>b.onclick=()=>{c.memories.splice(+b.dataset.delmem,1);save();renderMemory()})}
 function renderJournal(){let c=activeChat();document.getElementById('journalFor').textContent=c?'Nhật ký của: '+c.title:'Hãy mở một cuộc trò chuyện trước.';document.getElementById('journalList').innerHTML=c&&c.journal.length?c.journal.map((m,i)=>`<div class="panel">${esc(m.text)}<div class="toolbar"><small class="muted">${new Date(m.time).toLocaleString('vi-VN')}</small><button class="tool danger" data-deljournal="${i}">Xóa</button></div></div>`).join(''):'<p class="muted">Chưa có ghi chú.</p>';document.querySelectorAll('[data-deljournal]').forEach(b=>b.onclick=()=>{c.journal.splice(+b.dataset.deljournal,1);save();renderJournal()})}
 function setAvatar(file){if(!file)return;let r=new FileReader();r.onload=()=>{data.avatar=r.result;save();showAvatar()};r.readAsDataURL(file)}
