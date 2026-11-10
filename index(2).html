@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f8e9ef">
+<meta name="description" content="Dudu Chat — không gian trò chuyện do bạn tự tạo.">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Dudu Chat</title>
+<style>
+:root{--bg:#fff9fb;--paper:#fff;--pink:#f3dce6;--pink2:#eac8d8;--rose:#b76e8a;--ink:#4e3c46;--muted:#9c8791;--line:#f0e4e9;--lav:#eee9f7;--shadow:0 12px 35px #7b526014}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#fff9fb,#f8f2fa);font-family:ui-rounded,"Segoe UI",system-ui,sans-serif;color:var(--ink);min-height:100vh}
+button,input,textarea{font:inherit}button{cursor:pointer;border:0;color:inherit}
+.app{max-width:980px;margin:auto;min-height:100vh;padding:18px 16px 30px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,#f5dce7,#e9e0f4);display:grid;place-items:center;font-size:22px;box-shadow:var(--shadow)}.brand h1{font-size:20px;margin:0;letter-spacing:.2px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.iconbtn{background:#fff;border:1px solid var(--line);width:42px;height:42px;border-radius:15px;box-shadow:var(--shadow);font-size:18px}
+.screen{display:none}.screen.active{display:block}.hero{background:linear-gradient(140deg,#f8e8ef,#f1edf8);border:1px solid #f1e3eb;border-radius:28px;padding:26px;min-height:390px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:#fff8;filter:blur(1px)}.hero:before{width:170px;height:170px;top:-70px;left:-45px}.hero:after{width:210px;height:210px;right:-100px;bottom:-95px}
+.avatar{width:138px;height:138px;border-radius:50%;border:5px solid #fff;background:linear-gradient(135deg,#e9d8e4,#d8d3e9);display:grid;place-items:center;font-size:54px;overflow:hidden;box-shadow:0 10px 28px #7b526022;z-index:1}.avatar img{width:100%;height:100%;object-fit:cover}.hero h2{font-size:25px;margin:18px 0 6px;z-index:1}.hero p{color:#8d7582;margin:0 0 20px;max-width:440px;line-height:1.55;z-index:1}.primary{background:#b97893;color:white;padding:13px 23px;border-radius:16px;box-shadow:0 7px 18px #b9789330;font-weight:650;z-index:1}.secondary{background:#fff;border:1px solid var(--line);padding:11px 16px;border-radius:14px}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:22px 2px 12px}.sectionhead h3{margin:0;font-size:16px}.muted{color:var(--muted);font-size:12px}.chatlist{display:grid;gap:10px}.chatitem{display:flex;align-items:center;gap:12px;padding:13px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);text-align:left;width:100%}.chatavatar{width:43px;height:43px;border-radius:15px;background:var(--lav);display:grid;place-items:center;font-size:20px;flex:none}.chatmeta{min-width:0;flex:1}.chatmeta b{display:block;font-size:14px}.chatmeta small{display:block;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}.empty{text-align:center;color:var(--muted);padding:26px;background:#fff;border:1px dashed var(--pink2);border-radius:18px}
+.chathead{display:flex;align-items:center;gap:10px;margin-bottom:12px}.chathead .back{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 13px}.chathead h2{font-size:17px;margin:0;flex:1}.chathead small{color:var(--muted)}.chatpane{height:min(55vh,520px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}.bubble{max-width:88%;padding:12px 14px;border-radius:17px;margin:8px 0;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.bubble.user{margin-left:auto;background:#f8e7ef;border-bottom-right-radius:5px}.bubble.assistant{background:#f3eff8;border-bottom-left-radius:5px}.bubble .time{display:block;font-size:10px;color:var(--muted);margin-top:5px}.composer{display:flex;gap:8px;margin-top:10px}.composer textarea{resize:vertical;min-height:52px;max-height:140px;flex:1;border:1px solid var(--line);border-radius:16px;padding:13px;outline:none;background:#fff;color:var(--ink)}.send{width:54px;border-radius:16px;background:var(--rose);color:#fff;font-size:20px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.tool{font-size:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 11px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:17px;margin:12px 0;box-shadow:var(--shadow)}.panel h3{margin:0 0 12px;font-size:16px}.field{display:grid;gap:6px;margin:10px 0}.field label{font-size:12px;color:var(--muted)}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff;color:var(--ink);outline:none}.field textarea{min-height:100px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.menugrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.menubtn{padding:18px 12px;background:#fff;border:1px solid var(--line);border-radius:18px;text-align:left;box-shadow:var(--shadow)}.menubtn span{display:block;font-size:22px;margin-bottom:8px}.menubtn b{font-size:13px}.menubtn small{display:block;color:var(--muted);margin-top:4px}.danger{color:#a14e69}.notice{font-size:12px;line-height:1.5;color:#8d7582;background:#fbf5f8;border-radius:13px;padding:11px}.foot{text-align:center;color:#b09ca6;font-size:11px;margin:24px 0 5px}
+@media(min-width:700px){.menugrid{grid-template-columns:repeat(3,1fr)}.chatlist{grid-template-columns:repeat(2,1fr)}.hero{min-height:440px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand"><div class="logo">♡</div><div><h1>Dudu Chat</h1><small>your little world, your rules</small></div></div><button class="iconbtn" id="openMenu" aria-label="Mở chức năng">☰</button></header>
+
+<section id="home" class="screen active">
+ <div class="hero">
+  <div class="avatar" id="heroAvatar">🌷</div>
+  <h2>Chào mừng đến Dudu Chat</h2>
+  <p>Một không gian trống để bạn tự tạo nhân vật, tự viết prompt và xây dựng từng thế giới riêng.</p>
+  <button class="primary" id="createFirst">＋ Tạo cuộc trò chuyện</button>
+  <div class="toolbar"><button class="tool" id="uploadAvatar">♡ Thêm ảnh Kei</button><button class="tool" id="homeMenu">Mở chức năng</button></div>
+  <input type="file" id="avatarFile" accept="image/*" hidden>
+ </div>
+ <div class="sectionhead"><h3>Cuộc trò chuyện của bạn</h3><span class="muted" id="chatCount">0 cuộc trò chuyện</span></div>
+ <div class="chatlist" id="chatList"></div>
+ <div class="foot">Dudu Chat · không gian do bạn làm chủ</div>
+</section>
+
+<section id="chat" class="screen">
+ <div class="chathead"><button class="back" id="backHome">←</button><div style="flex:1"><h2 id="chatTitle">Cuộc trò chuyện</h2><small id="chatSubtitle">Bộ nhớ riêng</small></div><button class="iconbtn" id="chatOptions">···</button></div>
+ <div class="chatpane" id="messages"></div>
+ <div class="composer"><textarea id="messageInput" placeholder="Viết tin nhắn của bạn..."></textarea><button class="send" id="sendBtn">➤</button></div>
+ <div class="toolbar"><button class="tool" id="attachImage">▧ Gửi ảnh</button><button class="tool" id="editPrompt">✎ Prompt</button><button class="tool" id="openMemory">♡ Memory Vault</button><button class="tool" id="toggleRandom">✧ Random Mode: OFF</button><input type="file" id="imageFile" accept="image/*" hidden></div>
+ <p class="notice">Tin nhắn và prompt được lưu riêng trên thiết bị này. AI chưa được kết nối; phần trò chuyện hiện lưu nội dung bạn nhập, không giả lập câu trả lời của nhân vật.</p>
+</section>
+
+<section id="menu" class="screen">
+ <div class="chathead"><button class="back" id="menuBack">←</button><h2>Không gian của bạn</h2></div>
+ <div class="menugrid">
+  <button class="menubtn" data-page="create"><span>✧</span><b>Tạo cuộc trò chuyện</b><small>Tự đặt tên và prompt</small></button>
+  <button class="menubtn" data-page="memory"><span>♡</span><b>Memory Vault</b><small>Ký ức riêng từng chat</small></button>
+  <button class="menubtn" data-page="journal"><span>📖</span><b>Nhật ký</b><small>Lưu ghi chú thế giới</small></button>
+  <button class="menubtn" data-page="clock"><span>◷</span><b>Đồng hồ & báo thức</b><small>Giờ hiện tại và nhắc giờ</small></button>
+  <button class="menubtn" data-page="settings"><span>⚙</span><b>Cài đặt</b><small>Ảnh, dữ liệu, giao diện</small></button>
+  <button class="menubtn" data-page="about"><span>♡</span><b>Hướng dẫn</b><small>Dudu Chat hoạt động thế nào</small></button>
+ </div>
+</section>
+
+<section id="create" class="screen">
+ <div class="chathead"><button class="back" data-back>←</button><h2>Tạo thế giới mới</h2></div>
+ <div class="panel">
+  <div class="field"><label>Tên cuộc trò chuyện</label><input id="newTitle" placeholder="Ví dụ: Kei — thế giới hiện tại"></div>
+  <div class="field"><label>Prompt / thiết lập nhân vật</label><textarea id="newPrompt" placeholder="Dán prompt của bạn vào đây. Dudu Chat không tự viết hoặc chỉnh sửa prompt..."></textarea></div>
+  <div class="notice">Mỗi cuộc trò chuyện sẽ có lịch sử, prompt, Memory Vault và nhật ký riêng. Bạn có thể tạo nhiều thế giới độc lập.</div>
+  <button class="primary" id="saveChat" style="margin-top:14px">Tạo cuộc trò chuyện</button>
+ </div>
+</section>
+
+<section id="memory" class="screen">
+ <div class="chathead"><button class="back" data-back>←</button><h2>♡ Memory Vault</h2></div>
+ <div class="panel"><div class="muted" id="memoryFor">Chọn một cuộc trò chuyện để xem ký ức riêng.</div><div class="field"><label>Ký ức / chi tiết cần ghim</label><textarea id="memoryText" placeholder="Chỉ lưu những điều bạn muốn giữ lại..."></textarea></div><button class="primary" id="addMemory">Lưu ký ức</button><div id="memoryList" style="margin-top:14px"></div></div>
+</section>
+
+<section id="journal" class="screen">
+ <div class="chathead"><button class="back" data-back>←</button><h2>📖 Nhật ký</h2></div>
+ <div class="panel"><div class="muted" id="journalFor">Nhật ký được tách riêng theo từng cuộc trò chuyện.</div><div class="field"><label>Ghi chú mới</label><textarea id="journalText" placeholder="Ghi lại diễn biến hoặc điều bạn muốn nhớ..."></textarea></div><button class="primary" id="addJournal">Lưu ghi chú</button><div id="journalList" style="margin-top:14px"></div></div>
+</section>
+
+<section id="clock" class="screen">
+ <div class="chathead"><button class="back" data-back>←</button><h2>◷ Đồng hồ</h2></div>
+ <div class="panel"><div id="clockNow" style="font-size:36px;text-align:center;font-weight:700">--:--:--</div><p class="muted" style="text-align:center">Giờ trên thiết bị của bạn</p><div class="field"><label>Đặt nhắc giờ (khi trang đang mở)</label><input type="time" id="alarmTime"></div><button class="primary" id="setAlarm">Đặt báo thức</button><p id="alarmStatus" class="muted"></p></div>
+</section>
+
+<section id="settings" class="screen">
+ <div class="chathead"><button class="back" data-back>←</button><h2>⚙ Cài đặt</h2></div>
+ <div class="panel"><h3>Ảnh đại diện màn hình chờ</h3><button class="secondary" id="settingsAvatar">Chọn ảnh từ thiết bị</button><input type="file" id="settingsAvatarFile" accept="image/*" hidden></div>
+ <div class="panel"><h3>Dữ liệu</h3><p class="muted">Xuất bản sao lưu hoặc nhập lại dữ liệu Dudu Chat trên thiết bị này.</p><div class="toolbar"><button class="secondary" id="exportData">Xuất dữ liệu JSON</button><button class="secondary" id="importDataBtn">Nhập dữ liệu</button><input type="file" id="importFile" accept="application/json" hidden></div><button class="secondary danger" id="clearData" style="margin-top:12px">Xóa toàn bộ dữ liệu trên thiết bị</button></div>
+</section>
+
+<section id="about" class="screen">
+ <div class="chathead"><button class="back" data-back>←</button><h2>Hướng dẫn</h2></div>
+ <div class="panel"><h3>Dudu Chat hiện có gì?</h3><p>• Tạo nhiều cuộc trò chuyện độc lập.</p><p>• Lưu prompt, lịch sử tin nhắn, ký ức và nhật ký riêng từng chat.</p><p>• Gửi ảnh vào lịch sử, đổi ảnh Kei ở màn hình chờ.</p><p>• Random Mode là công tắc ghi nhớ lựa chọn của bạn trong từng chat.</p><p>• Đồng hồ và báo thức hoạt động khi trang đang mở.</p><hr style="border:0;border-top:1px solid var(--line)"><h3>Điều còn thiếu</h3><p>AI chưa kết nối nên ứng dụng chưa thể tự trả lời như Kei. Để làm điều đó cần tích hợp một dịch vụ AI và backend bảo vệ khóa API; không nên nhúng khóa bí mật trực tiếp vào ứng dụng công khai.</p></div>
+</section>
+</div>
+<script>
+const KEY='dudu_chat_data_v1';
+let data=load(), current=null, alarm=null, random=false;
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{chats:[],avatar:null}}catch{return {chats:[],avatar:null}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function page(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='home')renderChats();if(id==='memory')renderMemory();if(id==='journal')renderJournal()}
+function activeChat(){return data.chats.find(c=>c.id===current)}
+function renderChats(){let el=document.getElementById('chatList');document.getElementById('chatCount').textContent=data.chats.length+' cuộc trò chuyện';el.innerHTML=data.chats.length?data.chats.map(c=>`<button class="chatitem" data-chat="${c.id}"><div class="chatavatar">♡</div><div class="chatmeta"><b>${esc(c.title)}</b><small>${esc(c.messages.at(-1)?.text||c.prompt||'Chưa có tin nhắn')}</small></div><span>›</span></button>`).join(''):'<div class="empty">Chưa có cuộc trò chuyện nào.<br>Hãy tạo thế giới đầu tiên của bạn nhé.</div>';el.querySelectorAll('[data-chat]').forEach(b=>b.onclick=()=>openChat(b.dataset.chat))}
+function openChat(id){current=id;let c=activeChat();if(!c)return;random=!!c.random;document.getElementById('chatTitle').textContent=c.title;document.getElementById('chatSubtitle').textContent='Bộ nhớ riêng · '+c.messages.length+' tin nhắn';document.getElementById('toggleRandom').textContent='✧ Random Mode: '+(random?'ON':'OFF');renderMessages();page('chat')}
+function renderMessages(){let c=activeChat();let el=document.getElementById('messages');el.innerHTML=c.messages.length?c.messages.map(m=>`<div class="bubble ${m.role==='user'?'user':'assistant'}">${m.image?`<div>▧ Ảnh đã đính kèm: ${esc(m.text)}</div>`:esc(m.text)}<span class="time">${new Date(m.time).toLocaleString('vi-VN')}</span></div>`).join(''):'<div class="empty">Không gian này đang trống.<br>Bắt đầu bằng tin nhắn đầu tiên của bạn.</div>';el.scrollTop=el.scrollHeight}
+function send(text){let c=activeChat();if(!c||!text.trim())return;c.messages.push({role:'user',text:text.trim(),time:Date.now()});save();document.getElementById('messageInput').value='';renderMessages();document.getElementById('chatSubtitle').textContent='Bộ nhớ riêng · '+c.messages.length+' tin nhắn'}
+function renderMemory(){let c=activeChat();document.getElementById('memoryFor').textContent=c?'Đang xem ký ức của: '+c.title:'Hãy mở một cuộc trò chuyện trước.';document.getElementById('memoryList').innerHTML=c&&c.memories.length?c.memories.map((m,i)=>`<div class="panel">${esc(m.text)}<div class="toolbar"><small class="muted">${new Date(m.time).toLocaleString('vi-VN')}</small><button class="tool danger" data-delmem="${i}">Xóa</button></div></div>`).join(''):'<p class="muted">Chưa có ký ức được ghim.</p>';document.querySelectorAll('[data-delmem]').forEach(b=>b.onclick=()=>{c.memories.splice(+b.dataset.delmem,1);save();renderMemory()})}
+function renderJournal(){let c=activeChat();document.getElementById('journalFor').textContent=c?'Nhật ký của: '+c.title:'Hãy mở một cuộc trò chuyện trước.';document.getElementById('journalList').innerHTML=c&&c.journal.length?c.journal.map((m,i)=>`<div class="panel">${esc(m.text)}<div class="toolbar"><small class="muted">${new Date(m.time).toLocaleString('vi-VN')}</small><button class="tool danger" data-deljournal="${i}">Xóa</button></div></div>`).join(''):'<p class="muted">Chưa có ghi chú.</p>';document.querySelectorAll('[data-deljournal]').forEach(b=>b.onclick=()=>{c.journal.splice(+b.dataset.deljournal,1);save();renderJournal()})}
+function setAvatar(file){if(!file)return;let r=new FileReader();r.onload=()=>{data.avatar=r.result;save();showAvatar()};r.readAsDataURL(file)}
+function showAvatar(){let el=document.getElementById('heroAvatar');el.innerHTML=data.avatar?`<img src="${data.avatar}" alt="Ảnh đại diện">`:'🌷'}
+document.getElementById('createFirst').onclick=()=>page('create');document.getElementById('openMenu').onclick=()=>page('menu');document.getElementById('homeMenu').onclick=()=>page('menu');document.getElementById('backHome').onclick=()=>page('home');document.getElementById('menuBack').onclick=()=>page('home');document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>page('menu'));
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));
+document.getElementById('saveChat').onclick=()=>{let title=document.getElementById('newTitle').value.trim(),prompt=document.getElementById('newPrompt').value.trim();if(!title){alert('Bạn hãy đặt tên cuộc trò chuyện nhé.');return}let c={id:crypto.randomUUID(),title,prompt,messages:[],memories:[],journal:[],random:false};data.chats.unshift(c);save();document.getElementById('newTitle').value='';document.getElementById('newPrompt').value='';openChat(c.id)};
+document.getElementById('sendBtn').onclick=()=>send(document.getElementById('messageInput').value);document.getElementById('messageInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();document.getElementById('sendBtn').click()}});
+document.getElementById('editPrompt').onclick=()=>{let c=activeChat();let p=prompt('Chỉnh sửa prompt của cuộc trò chuyện này:',c.prompt||'');if(p!==null){c.prompt=p;save();alert('Đã lưu prompt.')}};document.getElementById('chatOptions').onclick=()=>{let c=activeChat();let v=prompt('Đổi tên cuộc trò chuyện:',c.title);if(v&&v.trim()){c.title=v.trim();save();openChat(c.id)}};
+document.getElementById('openMemory').onclick=()=>page('memory');document.getElementById('addMemory').onclick=()=>{let c=activeChat(),v=document.getElementById('memoryText').value.trim();if(!c){alert('Hãy mở cuộc trò chuyện trước.');return}if(v){c.memories.push({text:v,time:Date.now()});document.getElementById('memoryText').value='';save();renderMemory()}};
+document.getElementById('addJournal').onclick=()=>{let c=activeChat(),v=document.getElementById('journalText').value.trim();if(!c){alert('Hãy mở cuộc trò chuyện trước.');return}if(v){c.journal.push({text:v,time:Date.now()});document.getElementById('journalText').value='';save();renderJournal()}};
+document.getElementById('toggleRandom').onclick=()=>{let c=activeChat();random=!random;c.random=random;save();document.getElementById('toggleRandom').textContent='✧ Random Mode: '+(random?'ON':'OFF')};
+document.getElementById('attachImage').onclick=()=>document.getElementById('imageFile').click();document.getElementById('imageFile').onchange=e=>{let f=e.target.files[0];if(f){let c=activeChat();c.messages.push({role:'user',text:f.name,image:true,time:Date.now()});save();renderMessages()}};
+document.getElementById('uploadAvatar').onclick=()=>document.getElementById('avatarFile').click();document.getElementById('avatarFile').onchange=e=>setAvatar(e.target.files[0]);document.getElementById('settingsAvatar').onclick=()=>document.getElementById('settingsAvatarFile').click();document.getElementById('settingsAvatarFile').onchange=e=>setAvatar(e.target.files[0]);
+document.getElementById('exportData').onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='dudu-chat-backup.json';a.click();URL.revokeObjectURL(a.href)};
+document.getElementById('importDataBtn').onclick=()=>document.getElementById('importFile').click();document.getElementById('importFile').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.chats))throw Error();data=d;save();showAvatar();page('home');alert('Đã nhập dữ liệu.')}catch{alert('Tệp dữ liệu không hợp lệ.')}};r.readAsText(f)};
+document.getElementById('clearData').onclick=()=>{if(confirm('Xóa toàn bộ cuộc trò chuyện, prompt, ký ức và nhật ký trên thiết bị này?')){data={chats:[],avatar:null};current=null;save();showAvatar();page('home')}};
+function tick(){document.getElementById('clockNow').textContent=new Date().toLocaleTimeString('vi-VN');if(alarm&&new Date().toTimeString().slice(0,5)===alarm){alert('Đến giờ bạn đã đặt!');alarm=null;document.getElementById('alarmStatus').textContent='Báo thức đã reo.'}}setInterval(tick,1000);tick();
+document.getElementById('setAlarm').onclick=()=>{alarm=document.getElementById('alarmTime').value;document.getElementById('alarmStatus').textContent=alarm?'Đã đặt nhắc lúc '+alarm+' (cần giữ trang mở).':'Hãy chọn giờ trước.'};
+showAvatar();renderChats();
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
